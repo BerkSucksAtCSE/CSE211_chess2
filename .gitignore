@@ -1,0 +1,30 @@
+# Build directories
+/bin/
+/obj/
+/build/
+
+# Object files and executables
+*.o
+*.obj
+*.exe
+*.out
+
+# Dependency and temporary files
+Makefile.deps
+*.log
+*.tmp
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+desktop.ini
+
+# Editor-specific folders
+.vscode/
+.idea/
+
+# Backup or swap files
+*~
+*.swp
