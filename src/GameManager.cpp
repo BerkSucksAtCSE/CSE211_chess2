@@ -168,3 +168,9 @@ void GameManager::handleUndo() {
     std::cout << "Undo successful." << std::endl;
     printBoard();
 }
+
+
+void GameManager::printBoard() {
+    // Şimdilik sadece placeholder
+    std::cout << "PrintBoard() henüz implemente edilmedi." << std::endl;
+}

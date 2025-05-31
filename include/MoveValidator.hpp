@@ -20,5 +20,5 @@ class MoveValidator{
     bool isWithinBoard(const Position& pos) const;
 
 
-    bool MoveValidator::isReachableWithPortals(const Position& from, const Position& to);
+    bool isReachableWithPortals(const Position& from, const Position& to);
 };
