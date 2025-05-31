@@ -9,7 +9,7 @@ PortalSystem::PortalSystem(const std::vector<PortalConfig>& portals){
     }
 }
 
-
+/*
 bool PortalSystem::isPortalAvailable(const std::string& portalID, const std::string& color) const {
     auto it = portalStates.find(portalID);
     if (it == portalStates.end()) {
@@ -31,7 +31,19 @@ bool PortalSystem::isPortalAvailable(const std::string& portalID, const std::str
     }
 
     return false;
+}*/
+bool PortalSystem::isPortalAvailable(const Position& entryPos, const Piece& piece) const {
+    for (const auto& portal : portals) {
+        if (portal.positions.entry.x == entryPos.x && portal.positions.entry.y == entryPos.y) {
+            const auto& allowed = portal.properties.allowed_colors;
+            if (std::find(allowed.begin(), allowed.end(), piece.getColor()) != allowed.end()) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
+
 
 
 void PortalSystem::activatePortal(const std::string& portalId) {
@@ -46,6 +58,26 @@ void PortalSystem::updateCooldowns() {
     for (auto& entry : portalStates) {
         if (entry.second.cooldownRemaining > 0) {
             entry.second.cooldownRemaining--;
+        }
+    }
+}
+
+
+Position PortalSystem::getExitPosition(const Position& entryPos) {
+    for (auto& portal : portals) {
+        if (portal.positions.entry.x == entryPos.x && portal.positions.entry.y == entryPos.y) {
+            return portal.positions.exit;
+        }
+    }
+    // Bulunamazsa kendisini döndür
+    return entryPos;
+}
+
+
+void PortalSystem::triggerPortalCooldown(const Position& entryPos) {
+    for (auto& portal : portals) {
+        if (portal.positions.entry.x == entryPos.x && portal.positions.entry.y == entryPos.y) {
+            portal.properties.cooldown = portal.properties.cooldown; // Dummy olarak bırakıyorum istersen logic ekleyebiliriz.
         }
     }
 }

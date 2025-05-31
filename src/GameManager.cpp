@@ -126,6 +126,33 @@ void GameManager::handleMove(const std::string& fromStr, const std::string& toSt
     // Tasi gotur
     board.movePiece(fromStr, toStr);
 
+
+    // Portaldan geçiş kontrolü
+if (system.isPortalAvailable(to, *piece)) {
+    Position exitPos = system.getExitPosition(to);
+    std::string exitKey = std::to_string(exitPos.x) + "," + std::to_string(exitPos.y);
+
+    // Hedefte başka taş varsa yakalıyoruz (çünkü exit'e ışınlanıyoruz)
+    auto capturedAtExit = board.getPieceAt(exitKey);
+    if (capturedAtExit) {
+        board.removePiece(exitKey);
+    }
+
+    // Taşı portal çıkışına taşıyoruz
+    board.movePiece(toStr, exitKey);
+
+    // Move kaydını güncelle (undo için)
+    moveHistory.top().to = exitPos;
+
+    // Portala girildi → cooldown başlat
+    system.triggerPortalCooldown(to);
+    
+    std::cout << "Portal used! Teleported to: " << exitPos.x << "," << exitPos.y << std::endl;
+}
+
+
+
+
     // Move stackine kaydet (undo icin)
     moveHistory.push({from, to, captured});
 
@@ -171,6 +198,27 @@ void GameManager::handleUndo() {
 
 
 void GameManager::printBoard() {
-    // Şimdilik sadece placeholder
-    std::cout << "PrintBoard() henüz implemente edilmedi." << std::endl;
+    int boardSize = config.game_settings.board_size;
+
+    // Kolon basliklari
+    std::cout << "  ";
+    for (int x = 0; x < boardSize; ++x)
+        std::cout << x << " ";
+    std::cout << std::endl;
+
+    // Satirlar
+    for (int y = 0; y < boardSize; ++y) {
+        std::cout << y << " ";
+        for (int x = 0; x < boardSize; ++x) {
+            std::string key = std::to_string(x) + "," + std::to_string(y);
+            auto piece = board.getPieceAt(key);
+            if (piece) {
+                std::cout << piece->getType().at(0) << " ";  // ilk harfi bastiriyoruz
+            } else {
+                std::cout << ". ";
+            }
+        }
+        std::cout << std::endl;
+    }
 }
+
