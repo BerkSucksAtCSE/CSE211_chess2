@@ -1,4 +1,5 @@
 #include "ConfigReader.hpp"
+#include "GameManager.hpp"
 #include <iostream>
 #include <string>
 
@@ -128,6 +129,9 @@ int main(int argc, char *argv[]) {
     }
     std::cout << std::endl;
   }
+
+  GameManager game(config);
+  game.startGame();
 
   return 0;
 }
